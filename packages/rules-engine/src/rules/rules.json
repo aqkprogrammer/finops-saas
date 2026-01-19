@@ -1,0 +1,56 @@
+[
+  {
+    "id": "idle_ec2",
+    "name": "Idle EC2 Instance",
+    "description": "EC2 instance with CPU utilization below 5% for 7 days",
+    "resourceType": "ec2",
+    "condition": {
+      "field": "cpuUtilization.average",
+      "operator": "lessThan",
+      "value": 5
+    },
+    "action": {
+      "type": "stop",
+      "parameters": {}
+    },
+    "priority": "medium",
+    "enabled": true,
+    "riskLevel": "medium"
+  },
+  {
+    "id": "unattached_ebs",
+    "name": "Unattached EBS Volume",
+    "description": "EBS volume that is not attached to any EC2 instance",
+    "resourceType": "ebs-volume",
+    "condition": {
+      "field": "attached",
+      "operator": "equals",
+      "value": false
+    },
+    "action": {
+      "type": "delete",
+      "parameters": {}
+    },
+    "priority": "high",
+    "enabled": true,
+    "riskLevel": "high"
+  },
+  {
+    "id": "old_snapshot",
+    "name": "Old EBS Snapshot",
+    "description": "EBS snapshot older than 30 days",
+    "resourceType": "ebs-snapshot",
+    "condition": {
+      "field": "ageInDays",
+      "operator": "greaterThan",
+      "value": 30
+    },
+    "action": {
+      "type": "delete",
+      "parameters": {}
+    },
+    "priority": "medium",
+    "enabled": true,
+    "riskLevel": "low"
+  }
+]

@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Vehicle {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  aiReports VehicleAiReport[]
+
+  @@map("vehicles")
+}
+
+model VehicleAiReport {
+  id                String   @id @default(uuid())
+  vehicleId         String
+  trustScore        Int?
+  exteriorScore    Int?
+  engineScore      Int?
+  interiorScore    Int?
+  transmissionScore Int?
+  highlightsJson   Json?
+  issuesJson       Json?
+  aiModelVersion   String?
+  status           ReportStatus @default(PENDING)
+  failureReason    String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@unique([vehicleId])
+  @@map("vehicle_ai_reports")
+}
+
+enum ReportStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id         String       @id @default(uuid())
+  email      String       @unique
+  passwordHash String
+  createdAt  DateTime     @default(now())
+  loginTokens LoginToken[]
+
+  @@map("users")
+}
+
+model LoginToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("login_tokens")
+}
+
+model Scan {
+  id                String   @id @default(uuid())
+  scanId            String   @unique
+  customerId        String?
+  timestamp         DateTime
+  region            String
+  costSummary       Json     // { totalCost, currency, period, services }
+  resourceInventory Json     // { ec2Instances, ebsVolumes, ebsSnapshots }
+  issues            Json     // Array<DetectedIssue>
+  savings           Json     // { totalMonthlySavings, totalAnnualSavings, ruleBreakdown, resourceBreakdown }
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([scanId])
+  @@index([customerId])
+  @@index([timestamp])
+  @@map("scans")
+}

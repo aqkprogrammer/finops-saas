@@ -1,0 +1,36 @@
+[
+  {
+    "id": "ec2-idle-instance",
+    "name": "Idle EC2 Instance",
+    "description": "EC2 instance running but showing no activity",
+    "resourceType": "ec2",
+    "condition": {
+      "field": "state",
+      "operator": "equals",
+      "value": "running"
+    },
+    "action": {
+      "type": "stop",
+      "parameters": {}
+    },
+    "priority": "medium",
+    "enabled": true
+  },
+  {
+    "id": "rds-unused-instance",
+    "name": "Unused RDS Instance",
+    "description": "RDS instance with no connections",
+    "resourceType": "rds",
+    "condition": {
+      "field": "status",
+      "operator": "equals",
+      "value": "available"
+    },
+    "action": {
+      "type": "snapshot-and-delete",
+      "parameters": {}
+    },
+    "priority": "high",
+    "enabled": true
+  }
+]

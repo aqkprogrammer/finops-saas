@@ -1,0 +1,20 @@
+{
+  "name": "@finopsguard/rules-engine",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc && npm run copy-rules",
+    "copy-rules": "mkdir -p dist/rules && cp -r src/rules/* dist/rules/",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@finopsguard/shared": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

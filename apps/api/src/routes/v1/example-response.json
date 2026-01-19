@@ -1,0 +1,45 @@
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "vehicleId": "123e4567-e89b-12d3-a456-426614174000",
+  "trustScore": 85,
+  "exteriorScore": 90,
+  "engineScore": 80,
+  "interiorScore": 75,
+  "transmissionScore": 88,
+  "highlightsJson": {
+    "exterior": [
+      "Paint condition excellent",
+      "No visible dents or scratches",
+      "Tires in good condition"
+    ],
+    "interior": [
+      "Clean upholstery",
+      "All electronics functional"
+    ],
+    "mechanical": [
+      "Engine runs smoothly",
+      "Transmission shifts properly"
+    ]
+  },
+  "issuesJson": {
+    "minor": [
+      {
+        "category": "interior",
+        "description": "Minor wear on driver seat",
+        "severity": "low"
+      }
+    ],
+    "moderate": [
+      {
+        "category": "engine",
+        "description": "Slight oil leak detected",
+        "severity": "medium"
+      }
+    ]
+  },
+  "aiModelVersion": "v2.1.0",
+  "status": "COMPLETED",
+  "failureReason": null,
+  "createdAt": "2024-01-15T10:30:00.000Z",
+  "updatedAt": "2024-01-15T10:35:00.000Z"
+}
