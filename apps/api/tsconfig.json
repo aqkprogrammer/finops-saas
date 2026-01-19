@@ -1,18 +1,17 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "outDir": "./dist",
     "rootDir": "./src",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowJs": false
+
+    "strict": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "skipLibCheck": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.js"],
-  "references": [
-    { "path": "../../packages/aws-client" },
-    { "path": "../../packages/pricing" },
-    { "path": "../../packages/rules-engine" },
-    { "path": "../../packages/shared" }
-  ]
+  "include": ["src"]
 }
