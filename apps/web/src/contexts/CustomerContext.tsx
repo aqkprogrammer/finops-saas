@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { apiUrl } from '../lib/api';
 
 interface SubscriptionStatus {
   customerId: string;
@@ -40,7 +41,7 @@ export function CustomerProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await fetch(`/api/v1/subscription/status/${customerId}`);
+      const response = await fetch(apiUrl(`/api/v1/subscription/status/${customerId}`));
       if (response.ok) {
         const status = await response.json();
         setSubscriptionStatus(status);

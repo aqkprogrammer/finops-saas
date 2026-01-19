@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useCustomer } from '../contexts/CustomerContext';
+import { apiUrl } from '../lib/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -179,7 +180,7 @@ export default function Results() {
           throw new Error('Not authenticated');
         }
 
-        const response = await fetch(`/api/v1/scan/${scanId}`, {
+        const response = await fetch(apiUrl(`/api/v1/scan/${scanId}`), {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -217,7 +218,7 @@ export default function Results() {
       // Build return URL to come back to this scan after checkout
       const returnUrl = scanId ? `/results/${scanId}` : '/results';
 
-      const response = await fetch(`/api/v1/subscription/checkout?returnUrl=${encodeURIComponent(returnUrl)}`, {
+      const response = await fetch(apiUrl(`/api/v1/subscription/checkout?returnUrl=${encodeURIComponent(returnUrl)}`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

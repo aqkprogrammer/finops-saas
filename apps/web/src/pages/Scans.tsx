@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { apiUrl } from '../lib/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -26,7 +27,7 @@ export default function Scans() {
         throw new Error('Not authenticated');
       }
 
-      const response = await fetch('/api/v1/scans', {
+      const response = await fetch(apiUrl('/api/v1/scans'), {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

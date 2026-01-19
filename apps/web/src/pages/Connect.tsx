@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useCustomer } from '../contexts/CustomerContext';
+import { apiUrl } from '../lib/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -34,7 +35,7 @@ export default function Connect() {
     const initializeCustomer = async () => {
       if (!customerId) {
         try {
-          const response = await fetch('/api/v1/subscription/customer', {
+          const response = await fetch(apiUrl('/api/v1/subscription/customer'), {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -60,7 +61,7 @@ export default function Connect() {
     }
 
     try {
-      const response = await fetch('/api/v1/subscription/checkout', {
+      const response = await fetch(apiUrl('/api/v1/subscription/checkout'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +90,7 @@ export default function Connect() {
         throw new Error('Not authenticated');
       }
 
-      const response = await fetch('/api/v1/scan/run', {
+      const response = await fetch(apiUrl('/api/v1/scan/run'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

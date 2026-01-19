@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { apiUrl } from '../lib/api';
 
 export default function AuthVerify() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function AuthVerify() {
     // Call backend to verify magic link token and get JWT
     const verifyToken = async () => {
       try {
-        const response = await fetch(`/api/v1/auth/verify?token=${token}`, {
+        const response = await fetch(apiUrl(`/api/v1/auth/verify?token=${token}`), {
           method: 'GET',
         });
 

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { apiUrl } from '../lib/api';
 import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
@@ -11,7 +12,7 @@ export default function Header() {
   useEffect(() => {
     const checkMockMode = async () => {
       try {
-        const response = await fetch('/api/v1/health');
+        const response = await fetch(apiUrl('/api/v1/health'));
         if (response.ok) {
           const data = await response.json();
           setMockMode(data.mockMode || false);
