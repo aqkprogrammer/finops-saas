@@ -11,6 +11,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@finopsguard/rules-engine": "*",
     "@finopsguard/shared": "*"
   },
   "devDependencies": {
