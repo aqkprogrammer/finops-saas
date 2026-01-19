@@ -14,7 +14,7 @@ interface Scan {
 
 export default function Scans() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, accessToken } = useAuth();
   const [scans, setScans] = useState<Scan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,14 +22,13 @@ export default function Scans() {
 
   const fetchScans = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
+      if (!accessToken) {
         throw new Error('Not authenticated');
       }
 
       const response = await fetch('/api/v1/scans', {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -53,7 +52,7 @@ export default function Scans() {
       return;
     }
     fetchScans();
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, accessToken]);
 
   useEffect(() => {
     if (!hasRunningScans) return;

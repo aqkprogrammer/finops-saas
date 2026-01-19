@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User as SupabaseUser } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
 
 interface User {
   userId: string;
@@ -9,53 +11,49 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  login: (token: string) => void;
-  logout: () => void;
+  accessToken: string | null;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function mapSupabaseUser(sbUser: SupabaseUser | null): User | null {
+  if (!sbUser?.email) return null;
+  return {
+    userId: sbUser.id,
+    email: sbUser.email,
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      try {
-        // Decode JWT to get user info (simple base64 decode, no verification needed for frontend)
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        if (payload.exp * 1000 > Date.now()) {
-          setUser({
-            userId: payload.userId,
-            email: payload.email,
-          });
-        } else {
-          localStorage.removeItem('authToken');
-        }
-      } catch (error) {
-        localStorage.removeItem('authToken');
-      }
-    }
-    setLoading(false);
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(mapSupabaseUser(session?.user ?? null));
+      setAccessToken(session?.access_token ?? null);
+      setLoading(false);
+    });
+
+    // Listen for auth changes (login, logout, token refresh, OAuth callback)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(mapSupabaseUser(session?.user ?? null));
+      setAccessToken(session?.access_token ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const login = (token: string) => {
-    localStorage.setItem('authToken', token);
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      setUser({
-        userId: payload.userId,
-        email: payload.email,
-      });
-    } catch (error) {
-      console.error('Failed to decode token:', error);
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('authToken');
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
+    setAccessToken(null);
   };
 
   return (
@@ -64,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isAuthenticated: !!user,
         loading,
-        login,
+        accessToken,
         logout,
       }}
     >

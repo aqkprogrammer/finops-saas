@@ -139,8 +139,8 @@ const getTestData = (): ScanResult => {
 export default function Results() {
   const { scanId } = useParams<{ scanId: string }>();
   const [searchParams] = useSearchParams();
-  const { user } = useAuth();
-  const { customerId, subscriptionStatus, refreshStatus } = useCustomer();
+  const { user, accessToken } = useAuth();
+  const { customerId, refreshStatus } = useCustomer();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ScanResult | null>(null);
@@ -175,14 +175,13 @@ export default function Results() {
 
     const fetchResults = async () => {
       try {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
+        if (!accessToken) {
           throw new Error('Not authenticated');
         }
 
         const response = await fetch(`/api/v1/scan/${scanId}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
         if (!response.ok) {
@@ -206,12 +205,11 @@ export default function Results() {
     };
 
     fetchResults();
-  }, [scanId]);
+  }, [scanId, accessToken]);
 
   const handleCheckout = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
+      if (!accessToken) {
         setError('Please log in to subscribe');
         return;
       }
@@ -223,7 +221,7 @@ export default function Results() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ 
           customerId: customerId || undefined,

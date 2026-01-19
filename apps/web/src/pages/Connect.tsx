@@ -8,7 +8,7 @@ import Footer from '../components/Footer';
 export default function Connect() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { user } = useAuth();
+  const { accessToken } = useAuth();
   const { customerId, setCustomerId, subscriptionStatus, refreshStatus } = useCustomer();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -85,8 +85,7 @@ export default function Connect() {
     setError(null);
 
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
+      if (!accessToken) {
         throw new Error('Not authenticated');
       }
 
@@ -94,7 +93,7 @@ export default function Connect() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           region: formData.region,

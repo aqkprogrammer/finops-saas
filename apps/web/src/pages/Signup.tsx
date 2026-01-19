@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -8,8 +9,9 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -21,6 +23,7 @@ export default function Signup() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccessMessage(null);
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -35,22 +38,27 @@ export default function Signup() {
     }
 
     try {
-      const response = await fetch('/api/v1/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
-        body: JSON.stringify({ email, password }),
       });
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || 'Failed to create account');
+      if (signUpError) {
+        throw new Error(signUpError.message);
       }
 
-      const data = await response.json();
-      login(data.token);
-      navigate('/connect');
+      if (data.session) {
+        // Email confirmation is disabled in Supabase – user is signed in
+        navigate('/connect');
+      } else {
+        // Email confirmation is required – Supabase will send a confirmation email
+        setSuccessMessage(
+          'Check your email to confirm your account. Click the link we sent to complete sign up.'
+        );
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -79,6 +87,11 @@ export default function Signup() {
           {error && (
             <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-4">
               <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+            </div>
+          )}
+          {successMessage && (
+            <div className="rounded-md bg-green-50 dark:bg-green-900/20 p-4">
+              <p className="text-sm text-green-800 dark:text-green-200">{successMessage}</p>
             </div>
           )}
           <div className="space-y-4">

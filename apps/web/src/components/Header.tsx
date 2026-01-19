@@ -56,8 +56,7 @@ export default function Header() {
                 </Link>
                 <button
                   onClick={() => {
-                    logout();
-                    navigate('/login');
+                    logout().then(() => navigate('/login'));
                   }}
                   className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors font-medium"
                 >
