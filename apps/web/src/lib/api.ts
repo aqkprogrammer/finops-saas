@@ -6,7 +6,7 @@
  * Vercel: Project → Settings → Environment Variables → add:
  *   VITE_API_URL = https://finopsguardapi-production.up.railway.app
  */
-const base = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '');
+const base = (import.meta.env.VITE_API_URL || 'https://finopsguardapi-production.up.railway.app').replace(/\/$/, '');
 export const API_BASE = base;
 
 export function apiUrl(path: string): string {
