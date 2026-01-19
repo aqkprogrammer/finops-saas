@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "prisma generate && tsc",
+    "build": "npm run build -w @finopsguard/shared && npm run build -w @finopsguard/aws-client && npm run build -w @finopsguard/pricing && npm run build -w @finopsguard/rules-engine && prisma generate && tsc",
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "clean": "rm -rf dist",

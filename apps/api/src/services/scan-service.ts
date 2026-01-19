@@ -143,7 +143,7 @@ export class ScanService {
         });
       } catch (error) {
         if (error instanceof ValidationError) {
-          const missingServices = error.validationResult.errors.map(e => e.service).join(' / ');
+          const missingServices = error.validationResult.errors.map((e: { service: string }) => e.service).join(' / ');
           throw new Error(`Permission validation failed: Missing ${missingServices} permissions`);
         }
         throw error;

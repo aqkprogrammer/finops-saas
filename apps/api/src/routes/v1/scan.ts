@@ -291,13 +291,14 @@ export default async function scanRoutes(fastify: FastifyInstance) {
 
       // Handle AssumeRoleError (from our assumeRole function)
       if (error instanceof AssumeRoleError) {
-        const statusCode = error.code === 'InvalidRoleArn' || error.code === 'MalformedPolicy' 
+        const arErr = error as AssumeRoleError;
+        const statusCode = arErr.code === 'InvalidRoleArn' || arErr.code === 'MalformedPolicy' 
           ? 400 
           : 403;
         return reply.status(statusCode).send({
           error: 'Failed to assume IAM role',
-          message: error.message,
-          code: error.code,
+          message: arErr.message,
+          code: arErr.code,
         });
       }
 
