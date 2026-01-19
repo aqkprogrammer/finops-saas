@@ -7,6 +7,7 @@
     "moduleResolution": "NodeNext",
     "target": "ES2022"
   },
+  "include": ["src/**/*"],
   "references": [
     { "path": "../../packages/aws-client" },
     { "path": "../../packages/pricing" },

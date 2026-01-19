@@ -35,7 +35,7 @@ export default async function adminRoutes(fastify: FastifyInstance) {
         },
       },
     },
-  }, async (request, reply) => {
+  }, async (_request, reply) => {
     try {
       const metrics = await getAllAdminMetrics();
       return reply.status(200).send(metrics);

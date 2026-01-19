@@ -9,7 +9,7 @@ function getStripeClient(): Stripe {
     throw new Error('Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.');
   }
   return new Stripe(env.STRIPE_SECRET_KEY, {
-    apiVersion: '2024-11-20.acacia',
+    apiVersion: '2024-11-20.acacia' as '2025-12-15.clover',
   });
 }
 
@@ -178,13 +178,14 @@ export class SubscriptionService {
     const stripe = getStripeClient();
     const stripeSubscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
     
+    const sub = stripeSubscription as unknown as { current_period_end: number; created: number };
     const subscription: Subscription = {
       subscriptionId: `sub_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
       customerId,
       stripeSubscriptionId: stripeSubscription.id,
       status: stripeSubscription.status as Subscription['status'],
-      currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
-      createdAt: new Date(stripeSubscription.created * 1000),
+      currentPeriodEnd: new Date(sub.current_period_end * 1000),
+      createdAt: new Date(sub.created * 1000),
     };
 
     customerStorage.upsertSubscription(subscription);

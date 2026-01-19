@@ -1,11 +1,11 @@
 import { FastifyInstance } from 'fastify';
-import healthRoutes from './health';
-import scanRoutes from './scan';
-import scansRoutes from './scans';
-import subscriptionRoutes from './subscription';
-import vehicleAiReportRoutes from './vehicle-ai-report';
-import authRoutes from './auth';
-import adminRoutes from './admin';
+import healthRoutes from './health.js';
+import scanRoutes from './scan.js';
+import scansRoutes from './scans.js';
+import subscriptionRoutes from './subscription.js';
+import vehicleAiReportRoutes from './vehicle-ai-report.js';
+import authRoutes from './auth.js';
+import adminRoutes from './admin.js';
 
 export default async function v1Routes(fastify: FastifyInstance) {
   await fastify.register(healthRoutes, { prefix: '/health' });

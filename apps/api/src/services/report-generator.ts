@@ -19,7 +19,7 @@ export class ReportGenerator {
     const {
       companyName = 'Your Organization',
       reportTitle = 'AWS Cost Optimization Report',
-      includeCharts = false,
+      includeCharts: _includeCharts = false,
     } = options;
 
     const issuesByRiskLevel = this.groupIssuesByRiskLevel(scanResult.issues);
@@ -191,7 +191,7 @@ export class ReportGenerator {
   private generateDetectedIssues(
     scanResult: ScanResult,
     issuesByRiskLevel: Record<string, DetectedIssue[]>,
-    issuesByRule: Record<string, DetectedIssue[]>
+    _issuesByRule: Record<string, DetectedIssue[]>
   ): string {
     const riskLevelOrder = ['critical', 'high', 'medium', 'low'];
     const riskLevelLabels: Record<string, string> = {

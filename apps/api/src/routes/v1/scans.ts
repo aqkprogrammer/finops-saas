@@ -58,19 +58,20 @@ export default async function scansRoutes(fastify: FastifyInstance) {
       },
     });
 
+    type DbScan = { scanId: string; customerId: string | null; createdAt: Date; costSummary: unknown; savings: unknown };
     fastify.log.debug({ 
       customerId, 
       scanCount: dbScans.length,
-      scanIds: dbScans.map(s => s.scanId),
-      scanCustomerIds: dbScans.map(s => s.customerId),
+      scanIds: dbScans.map((s: DbScan) => s.scanId),
+      scanCustomerIds: dbScans.map((s: DbScan) => s.customerId),
     }, 'Found scans');
 
-    const scans = dbScans.map((scan) => ({
+    const scans = dbScans.map((scan: DbScan) => ({
       scanId: scan.scanId,
       status: 'completed' as const,
       createdAt: scan.createdAt.toISOString(),
-      totalCost: (scan.costSummary as any)?.totalCost || 0,
-      totalSavings: (scan.savings as any)?.totalMonthlySavings || 0,
+      totalCost: (scan.costSummary as { totalCost?: number })?.totalCost || 0,
+      totalSavings: (scan.savings as { totalMonthlySavings?: number })?.totalMonthlySavings || 0,
     }));
 
     return reply.status(200).send({ scans });

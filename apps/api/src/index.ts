@@ -45,7 +45,6 @@ await fastify.register(swagger, {
       { name: 'admin', description: 'Admin-only endpoints' },
     ],
   },
-  exposeRoute: true,
 });
 
 await fastify.register(swaggerUi, {

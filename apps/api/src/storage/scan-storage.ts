@@ -1,4 +1,5 @@
 import type { ScanResult } from '../services/scan-service.js';
+import type { Scan } from '@prisma/client';
 import { prisma } from '../db/prisma.js';
 
 /**
@@ -168,7 +169,7 @@ class ScanStorage {
       orderBy: { timestamp: 'desc' },
     });
     
-    return dbScans.map(dbScan => this.dbToScanResult(dbScan));
+    return dbScans.map((dbScan: Scan) => this.dbToScanResult(dbScan));
   }
 
   /**

@@ -12,7 +12,7 @@ function getStripeClient(): Stripe {
     throw new Error('Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.');
   }
   return new Stripe(env.STRIPE_SECRET_KEY, {
-    apiVersion: '2024-11-20.acacia',
+    apiVersion: '2024-11-20.acacia' as '2025-12-15.clover',
   });
 }
 

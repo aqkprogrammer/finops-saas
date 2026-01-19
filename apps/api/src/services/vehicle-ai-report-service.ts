@@ -1,4 +1,4 @@
-import { ReportStatus, Prisma } from '@prisma/client';
+import { ReportStatus, VehicleAiReport, Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { prisma } from '../db/prisma.js';
 
@@ -43,7 +43,7 @@ export class VehicleAiReportService {
    * Ensures idempotency - one report per vehicle
    */
   async createReport(input: CreateReportInput): Promise<VehicleAiReportResponse> {
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Check if vehicle exists, create if not
       await tx.vehicle.upsert({
         where: { id: input.vehicleId },
@@ -83,7 +83,7 @@ export class VehicleAiReportService {
       data: {
         ...input,
         updatedAt: new Date(),
-      },
+      } as Prisma.VehicleAiReportUpdateInput,
     });
 
     return this.toResponse(report);
@@ -116,11 +116,13 @@ export class VehicleAiReportService {
       aiModelVersion: string;
     }
   ): Promise<VehicleAiReportResponse> {
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const report = await tx.vehicleAiReport.update({
         where: { vehicleId },
         data: {
           ...results,
+          highlightsJson: results.highlightsJson as Prisma.InputJsonValue,
+          issuesJson: results.issuesJson as Prisma.InputJsonValue,
           status: ReportStatus.COMPLETED,
           updatedAt: new Date(),
         },
@@ -152,9 +154,7 @@ export class VehicleAiReportService {
   /**
    * Convert Prisma model to response DTO
    */
-  private toResponse(
-    report: Prisma.VehicleAiReportGetPayload<{}>
-  ): VehicleAiReportResponse {
+  private toResponse(report: VehicleAiReport): VehicleAiReportResponse {
     return {
       id: report.id,
       vehicleId: report.vehicleId,

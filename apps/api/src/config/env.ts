@@ -17,7 +17,7 @@ const envSchema = z.object({
   AWS_SECRET_ACCESS_KEY: z.string().optional(),
   AWS_SESSION_TOKEN: z.string().optional(),
   // Mock AWS mode for testing (MOCK_AWS=true enables mock mode)
-  MOCK_AWS: z.string().transform((val) => val === 'true').optional().default(false),
+  MOCK_AWS: z.string().optional().default('false').transform((val) => val === 'true'),
   // Admin emails (comma-separated)
   ADMIN_EMAILS: z.string().optional(),
 });

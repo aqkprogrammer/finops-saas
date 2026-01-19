@@ -4,7 +4,6 @@ import { ScanService } from '../../services/scan-service.js';
 import { scanStorage } from '../../storage/scan-storage.js';
 import { ReportGenerator } from '../../services/report-generator.js';
 import { subscriptionService } from '../../services/subscription-service.js';
-import { customerStorage } from '../../storage/customer-storage.js';
 import { AssumeRoleError } from '@finopsguard/aws-client';
 import { authMiddleware } from '../../plugins/auth.js';
 import { prisma } from '../../db/prisma.js';

@@ -10,7 +10,7 @@ export interface ApiError {
 
 export function errorHandler(
   error: FastifyError,
-  request: FastifyRequest,
+  _request: FastifyRequest,
   reply: FastifyReply
 ) {
   // Zod validation errors

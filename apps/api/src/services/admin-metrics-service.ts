@@ -100,17 +100,13 @@ export async function calculateUsersWithAtLeastOneScanPercent(totalUsers: number
   });
 
   const uniqueUsersWithScans = new Set(
-    usersWithScans.map((s) => s.customerId).filter((id): id is string => id !== null)
+    usersWithScans.map((s: { customerId: string | null }) => s.customerId).filter((id): id is string => id !== null)
   ).size;
   
   return Number(((uniqueUsersWithScans / totalUsers) * 100).toFixed(2));
 }
 
 export async function getAllAdminMetrics(): Promise<AdminMetrics> {
-  const now = Date.now();
-  const last24Hours = new Date(now - 24 * 60 * 60 * 1000);
-  const last7Days = new Date(now - 7 * 24 * 60 * 60 * 1000);
-
   const [
     totalUsers,
     newUsersLast7Days,

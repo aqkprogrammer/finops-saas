@@ -195,8 +195,19 @@ export default async function vehicleAiReportRoutes(fastify: FastifyInstance) {
       }).parse(request.params);
 
       const body = updateReportSchema.parse(request.body || {});
-
-      const report = await vehicleAiReportService.updateReport(params.id, body);
+      const data = {
+        trustScore: body.trustScore,
+        exteriorScore: body.exteriorScore,
+        engineScore: body.engineScore,
+        interiorScore: body.interiorScore,
+        transmissionScore: body.transmissionScore,
+        highlightsJson: body.highlightsJson,
+        issuesJson: body.issuesJson,
+        aiModelVersion: body.aiModelVersion,
+        status: body.status,
+        failureReason: body.failureReason,
+      };
+      const report = await vehicleAiReportService.updateReport(params.id, data);
 
       return reply.status(200).send({
         ...report,
@@ -222,7 +233,7 @@ export default async function vehicleAiReportRoutes(fastify: FastifyInstance) {
       ) {
         return reply.status(404).send({
           error: 'Report not found',
-          message: `No AI report found for vehicle ${request.params.id}`,
+          message: `No AI report found for vehicle ${(request.params as { id?: string })?.id ?? 'unknown'}`,
         });
       }
 
